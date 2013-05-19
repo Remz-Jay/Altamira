@@ -5,3 +5,5 @@
 css/
 js/
 test/report/*
+atlassian-ide-plugin.xml
+.idea
