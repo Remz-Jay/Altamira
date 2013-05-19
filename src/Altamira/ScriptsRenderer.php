@@ -14,37 +14,39 @@ class ScriptsRenderer extends \ArrayIterator
     /**
      * Renders the JS stored herein. Passing true to $withScript wraps it in its own <script> tags.
      * @param bool $withScript
+     *
      * @return \Altamira\ScriptsRenderer provides for fluent interface
      */
-    public function render( $withScript = false )
+    public function render($withScript = false)
     {
-       echo $this->get( $withScript );
-        
+        echo $this->get($withScript);
+
         return $this;
-        
+
     }
-    
+
     /**
      * Returns the current script value.
      * @param boolean $withScript
-     * @return Ambigous <string, mixed>
+     *
+     * @return string
      */
-    public function get( $withScript = false )
+    public function get($withScript = false)
     {
         $retVal = '';
-        
-        if ( $withScript ) {
+
+        if ($withScript) {
             $retVal .= "<script type='text/javascript'>\n";
         }
-        
+
         $retVal .= $this->current();
-        
-        if ( $withScript ) {
+
+        if ($withScript) {
             $retVal .= "\n</script>\n";
         }
-        
+
         return $retVal;
-        
+
     }
-    
+
 }

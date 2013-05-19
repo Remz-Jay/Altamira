@@ -7,10 +7,11 @@ namespace Altamira\JsWriter\Ability;
 /**
  * This interface dictates that the implementing class can control
  * and transform options around allowing zooming around the chart
- * @namespace \Altamira\JsWriter\Ability
- * @package JsWriter
+ *
+ * @namespace  \Altamira\JsWriter\Ability
+ * @package    JsWriter
  * @subpackage Ability
- * @author relwell
+ * @author     relwell
  */
 interface Zoomable
 {
@@ -19,5 +20,5 @@ interface Zoomable
      * Modes include x, y, and xy
      * @param array $options
      */
-    public function useZooming(array $options = array('mode'=>'xy'));
+    public function useZooming(array $options = array('mode' => 'xy'));
 }

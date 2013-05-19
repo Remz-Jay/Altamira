@@ -7,10 +7,11 @@ namespace Altamira\JsWriter\Ability;
 /**
  * This interface dictates that the implementing class can control
  * and transform options around point highlighting
- * @namespace \Altamira\JsWriter\Ability
- * @package JsWriter
+ *
+ * @namespace  \Altamira\JsWriter\Ability
+ * @package    JsWriter
  * @subpackage Ability
- * @author relwell
+ * @author     relwell
  */
 interface Highlightable
 {
@@ -18,5 +19,5 @@ interface Highlightable
      * Determines whether to allow highlighting of points, and the highlight size in its options
      * @param array $opts
      */
-    public function useHighlighting(array $opts = array('size'=>7.5) );
+    public function useHighlighting(array $opts = array('size' => 7.5));
 }

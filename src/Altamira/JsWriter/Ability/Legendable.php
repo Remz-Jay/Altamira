@@ -7,10 +7,11 @@ namespace Altamira\JsWriter\Ability;
 /**
  * This interface dictates that the implementing class can control
  * and transform options around displaying a legend
+ *
  * @namespace \Altamira\JsWriter\Ability
- * @package JsWriter
+ * @package    JsWriter
  * @subpackage Ability
- * @author relwell
+ * @author     relwell
  */
 interface Legendable
 {
@@ -18,9 +19,9 @@ interface Legendable
      * Configures the legend component of a chart
      * @param array $opts
      */
-    public function setLegend( array $opts = array('on'       => 'true', 
-                                                   'location' => 'ne', 
-                                                   'x'        => 0, 
-                                                   'y'        => 0)
-                             );
+    public function setLegend(array $opts = array('on' => 'true',
+                                  'location' => 'ne',
+                                  'x' => 0,
+                                  'y' => 0)
+    );
 }

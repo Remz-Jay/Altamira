@@ -17,12 +17,12 @@
          testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
          strict="true"
          verbose="true">
-  
+
 	<testsuites>
-	  <testsuite name="Altamira Test Suite">
-	    <directory>../test</directory>
-	  </testsuite>
+		<testsuite name="Altamira Test Suite">
+			<directory>../test</directory>
+		</testsuite>
 	</testsuites>
-  
-  
+
+
 </phpunit>

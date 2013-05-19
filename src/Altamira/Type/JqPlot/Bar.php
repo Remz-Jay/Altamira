@@ -5,16 +5,20 @@
  *
  */
 namespace Altamira\Type\JqPlot;
+
+use Altamira\Type\TypeAbstract;
+
 /**
  * This class registers a series or an entire chart for rendering as a bar
+ *
  * @author relwell
  * @package Type
  * @subpackage Flot
  */
-class Bar extends \Altamira\Type\TypeAbstract
+class Bar extends TypeAbstract
 {
     const TYPE = 'bar';
-    
+
     /**
      * Only used for this specific bar type -- fulfilled via config
      */
@@ -26,57 +30,60 @@ class Bar extends \Altamira\Type\TypeAbstract
      * @see \Altamira\Type\TypeAbstract::getOptions()
      * @return array
      */
-	public function getOptions()
-	{
-		$opts = array();
+    public function getOptions()
+    {
+        $opts = array();
 
-		$first = array();
-		$second = array();
-		
-        if ( $this->axisRenderer ) {
-		    $first['renderer'] = '#' . $this->axisRenderer . '#';
+        $first = array();
+        $second = array();
+
+        if ($this->axisRenderer) {
+            $first['renderer'] = '#' . $this->axisRenderer . '#';
         }
-        
-		if( isset( $this->options['ticks'] ) ) {
-			$first['ticks'] = $this->options['ticks'];
-		}
-		
-		$second['min'] = isset( $this->options['min'] ) ? $this->options['min'] : 0;
 
-		if( isset( $this->options['horizontal'] ) && $this->options['horizontal'] ) {
-			$opts['xaxis'] = $second;
-			$opts['yaxis'] = $first;
-		} else {
-			$opts['xaxis'] = $first;
-			$opts['yaxis'] = $second;
-		}
+        if (isset($this->options['ticks'])) {
+            $first['ticks'] = $this->options['ticks'];
+        }
 
-		$opts = array( 'axes' => $opts );
+        $second['min'] = isset($this->options['min']) ? $this->options['min'] : 0;
 
-		if( isset( $this->options['stackSeries'] ) ) {
-			$opts['stackSeries'] = $this->options['stackSeries'];
-		}
+        if (isset($this->options['horizontal']) && $this->options['horizontal']) {
+            $opts['xaxis'] = $second;
+            $opts['yaxis'] = $first;
+        } else {
+            $opts['xaxis'] = $first;
+            $opts['yaxis'] = $second;
+        }
 
-		if( isset( $this->options['seriesColors'] ) ) {
-			$opts['seriesColors'] = $this->options['seriesColors'];
-		}
+        $opts = array('axes' => $opts);
 
-		return $opts;
-	}
+        if (isset($this->options['stackSeries'])) {
+            $opts['stackSeries'] = $this->options['stackSeries'];
+        }
 
-	/**
-	 * Allows us to configure bar direction for renderer
-	 * (non-PHPdoc)
-	 * @see \Altamira\Type\TypeAbstract::setOption()
-	 * @param string $name
-	 * @param mixed $value
-	 * @return \Altamira\JsWriter\JqPlot\Bar
-	 */
-	public function setOption( $name, $value )
-	{
-	    if ( in_array( $name, array( 'horizontal', 'vertical' ) ) ) {
-	        $this->options['barDirection'] = $name;
-	    }
-	    return parent::setOption( $name, $value );
-	}
+        if (isset($this->options['seriesColors'])) {
+            $opts['seriesColors'] = $this->options['seriesColors'];
+        }
+
+        return $opts;
+    }
+
+    /**
+     * Allows us to configure bar direction for renderer
+     * (non-PHPdoc)
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @see \Altamira\Type\TypeAbstract::setOption()
+     *
+     * @return Bar
+     */
+    public function setOption($name, $value)
+    {
+        if (in_array($name, array('horizontal', 'vertical'))) {
+            $this->options['barDirection'] = $name;
+        }
+
+        return parent::setOption($name, $value);
+    }
 }

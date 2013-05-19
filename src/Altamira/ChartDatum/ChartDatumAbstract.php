@@ -6,129 +6,139 @@
  */
 namespace Altamira\ChartDatum;
 
-use \Altamira\JsWriter\JsWriterAbstract;
-use \Altamira\Series;
+use Altamira\JsWriter\JsWriterAbstract;
+use Altamira\Series;
 
 /**
  * Data abstraction class for points.
  * Provides a common interface for data access between different dimensionalities of chart data
+ *
  * @package ChartDatum
  * @author relwell
  */
 abstract class ChartDatumAbstract implements \ArrayAccess
 {
     /**
-     * Contains all information about 
+     * Contains all information about
      * @var array
      */
     protected $datumData;
-    
+
     /**
      * Used to determine how we render certain values
-     * @var Altamira\JsWriter\JsWriterAbstract
+     * @var JsWriterAbstract
      */
     protected $jsWriter;
-    
+
     /**
      * Used to determine how we render certain values, based on, for instance, type
-     * @var Altamira\Series
+     * @var Series
      */
     protected $series;
-    
+
     /**
      * Constructor method
      * @param array       $dimensions
      * @param string|null $label
+     *
      * @throw \InvalidArgumentException
      */
-    abstract public function __construct( array $dimensions, $label = null );
-    
+    abstract public function __construct(array $dimensions, $label = null);
+
     /**
      * Used for rendering into json string
-     * @param  boolean $useLabel whether to use a label (doesn't always apply)
+     * @param boolean $useLabel whether to use a label (doesn't always apply)
+     *
      * @return array
      */
-    abstract public function getRenderData( $useLabel = false );
-    
+    abstract public function getRenderData($useLabel = false);
+
     /**
      * Set the label for this datum
      * @param string $label
+     *
      * @return \Altamira\ChartDatumAbstract
      */
-    public function setLabel( $label )
+    public function setLabel($label)
     {
         $this['label'] = $label;
         return $this;
     }
-    
+
     /**
      * Sets the JsWriter relative to the datum
      * @param \Altamira\JsWriter\JsWriterAbstract $jsWriter
+     *
      * @return \Altamira\ChartDatum\ChartDatumAbstract
      */
-    public function setJsWriter( JsWriterAbstract $jsWriter )
+    public function setJsWriter(JsWriterAbstract $jsWriter)
     {
         $this->jsWriter = $jsWriter;
         return $this;
     }
-    
+
     /**
-     * Registers an instance of \Altamira\Series with this instance 
+     * Registers an instance of \Altamira\Series with this instance
      * @param \Altamira\Series $series
      */
-    public function setSeries( Series $series )
+    public function setSeries(Series $series)
     {
         $this->series = $series;
     }
-    
+
     /**
-     * Convenience method for accessing label the same way we set it. 
+     * Convenience method for accessing label the same way we set it.
      * @return string
      */
     public function getLabel()
     {
         return $this['label'];
     }
-    
-	/**
-	 * Returns whether a value exists for the provided offset
-     * @see ArrayAccess::offsetExists()
+
+    /**
+     * Returns whether a value exists for the provided offset
      * @param string $offset
+     *
+     * @see ArrayAccess::offsetExists()
      * @return bool
      */
-    public function offsetExists ($offset)
+    public function offsetExists($offset)
     {
         return isset($this->datumData[$offset]);
     }
 
-	/**
-	 * Returns a value for the provided offset
-     * @see ArrayAccess::offsetGet()
+    /**
+     * Returns a value for the provided offset
      * @param string $offset
+     *
+     * @see ArrayAccess::offsetGet()
+     *
      * @return mixed value
      */
-    public function offsetGet ($offset)
+    public function offsetGet($offset)
     {
         return isset($this->datumData[$offset]) ? $this->datumData[$offset] : false;
     }
 
-	/**
-	 * Sets a value for the provided offset
-     * @see ArrayAccess::offsetSet()
+    /**
+     * Sets a value for the provided offset
      * @param string $offset
-     * @param mixed $value
+     * @param mixed  $value
+     *
+     * @see ArrayAccess::offsetSet()
      */
-    public function offsetSet ($offset, $value)
+    public function offsetSet($offset, $value)
     {
         $this->datumData[$offset] = $value;
     }
 
-	/**
-	 * De-registers the value for the provided offset
-     * @see ArrayAccess::offsetUnset()
+    /**
+     * De-registers the value for the provided offset
      * @param string $offset
+     *
+     * @see ArrayAccess::offsetUnset()
      */
-    public function offsetUnset ($offset)
+    public function offsetUnset($offset)
     {
         unset($this->datumData[$offset]);
     }

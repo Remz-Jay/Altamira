@@ -7,10 +7,11 @@ namespace Altamira\JsWriter\Ability;
 /**
  * This interface dictates that the implementing class can control
  * and transform options around handling dates within charts
- * @namespace \Altamira\JsWriter\Ability
- * @package JsWriter
+ *
+ * @namespace  \Altamira\JsWriter\Ability
+ * @package    JsWriter
  * @subpackage Ability
- * @author relwell
+ * @author     relwell
  */
 interface Datable
 {
@@ -18,5 +19,5 @@ interface Datable
      * Determines if a chart axis should use a date format
      * @param string $axis
      */
-    public function useDates( $axis = 'x' );
+    public function useDates($axis = 'x');
 }

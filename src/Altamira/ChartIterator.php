@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Class definition for \Altamira\ChartIterator
  * @author relwell
@@ -6,8 +6,13 @@
  */
 namespace Altamira;
 
+
+use Altamira\Config;
+use Altamira\JsWriter\Flot;
+use Altamira\JsWriter\JqPlot;
 /**
  * Allows us to register and iterate over charts for rendering
+ *
  * @author relwell
  */
 class ChartIterator extends \ArrayIterator
@@ -27,69 +32,70 @@ class ChartIterator extends \ArrayIterator
      * @var array
      */
     protected $libraries;
-    
+
     /**
      * Constructor method
      * @param array $charts array of \Altamira\Chart instances
+     *
      * @throws \Exception
      */
-    public function __construct( array $charts )
+    public function __construct(array $charts)
     {
         //enforce that this is an array of charts
         $plugins = array();
         $scripts = array();
-        
+
         foreach ($charts as $chart) {
-            if (! $chart instanceof Chart ) {
+            if (!$chart instanceof Chart) {
                 throw new \UnexpectedValueException("ChartIterator only supports an array of Chart instances.");
             }
-            
+
             // time saver -- if it's a chart, we can use this loop to add files, too
-            $plugins = array_merge( $plugins, $chart->getFiles() );
+            $plugins = array_merge($plugins, $chart->getFiles());
             $scripts[] = $chart->getScript();
             $this->libraries[$chart->getLibrary()] = true;
         }
 
-        $this->plugins = new FilesRenderer( $plugins );
-        $this->scripts = new ScriptsRenderer( $scripts );
-        
-        
-        parent::__construct( $charts );        
+        $this->plugins = new FilesRenderer($plugins);
+        $this->scripts = new ScriptsRenderer($scripts);
+
+
+        parent::__construct($charts);
     }
-    
-    
+
+
     /**
      * The following render methods are helpers that allow us to group JS easier.
-     * We don't handle chart HTML this way since placement and context is a front-end concern.  
+     * We don't handle chart HTML this way since placement and context is a front-end concern.
      */
-    
+
     /**
      * Echoes out script tags referencing JS files
      * @return \Altamira\ChartIterator provides fluent interface
      */
     public function renderPlugins()
     {
-        
-        while ( $this->plugins->valid() ) {
+
+        while ($this->plugins->valid()) {
 
             $this->plugins->render()
-                          ->next();
-            
+                ->next();
+
         }
-        
+
         return $this;
-        
+
     }
-    
+
     /**
      * Returns an array of plugins, if we don't want to echo
      * @return array
      */
     public function getPlugins()
     {
-        return (array) $this->plugins;
+        return (array)$this->plugins;
     }
-    
+
     /**
      * Echoes out inline javascript. Note that we group it all together in a single script tag.
      * @return \Altamira\ChartIterator provides fluent interface
@@ -97,18 +103,18 @@ class ChartIterator extends \ArrayIterator
     public function renderScripts()
     {
         echo "<script type='text/javascript'>\n";
-        while ( $this->scripts->valid() ) {
-            
+        while ($this->scripts->valid()) {
+
             $this->scripts->render()
-                          ->next();
-            
+                ->next();
+
         }
         echo "\n</script>\n";
-        
+
         return $this;
-        
+
     }
-    
+
     /**
      * Returns inline js, in case you don't want to immediately render.
      * @return string
@@ -116,96 +122,96 @@ class ChartIterator extends \ArrayIterator
     public function getScripts()
     {
         $retVal = '';
-        while ( $this->scripts->valid() ) {
-            $retVal .= "<script type='text/javascript'>\n{$this->scripts->get()}\n</script>\n";
+        while ($this->scripts->valid()) {
+            $retVal .= "<script type='text/javascript'>\n" . $this->scripts->get() . "\n</script>\n";
             $this->scripts->next();
         }
-        
+
         return $retVal;
     }
-    
+
     /**
      * Provides libraries paths based on config values
      * @return array
      */
     public function getLibraries()
     {
-        $config = \Altamira\Config::getInstance();
+        $config = Config::getInstance();
         $libraryToPath = array(
-                \Altamira\JsWriter\Flot::LIBRARY    =>    $config['js.flotlib'],
-                \Altamira\JsWriter\JqPlot::LIBRARY  =>    $config['js.jqplotlib']
-                );
-        $libraryKeys = array_unique( array_keys( $this->libraries ) );
+           Flot::LIBRARY => $config['js.flotlib'],
+           JqPlot::LIBRARY => $config['js.jqplotlib']
+        );
+        $libraryKeys = array_unique(array_keys($this->libraries));
         $libraryPaths = array();
-        
+
         foreach ($libraryKeys as $key) {
             $libraryPaths[] = $libraryToPath[$key];
         }
-        
+
         return $libraryPaths;
     }
-    
+
     /**
      * Echoes library plugins for invoking in the DOM head
      * @return \Altamira\ChartIterator provides fluent interface
      */
     public function renderLibraries()
     {
-        foreach ( $this->getLibraries() as $libraryPath ) {
-            echo "<script type='text/javascript' src='$libraryPath'></script>";
+        foreach ($this->getLibraries() as $libraryPath) {
+            echo "<script type='text/javascript' src='" . $libraryPath . "'></script>";
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Echoes any CSS that is needed for the libraries to render correctly
      * @return \Altamira\ChartIterator provides fluent interface
      */
     public function renderCss()
     {
-        $config = \Altamira\Config::getInstance();
-        
-        foreach ( $this->libraries as $library => $junk ) {
-            switch( $library ) {
-                case \Altamira\JsWriter\Flot::LIBRARY:
+        $config = Config::getInstance();
+        $cssPath = '';
+        foreach ($this->libraries as $library => $junk) {
+            switch ($library) {
+                case Flot::LIBRARY:
                     break;
-                case \Altamira\JsWriter\JqPlot::LIBRARY:
+                case JqPlot::LIBRARY:
                 default:
                     $cssPath = $config['css.jqplotpath'];
             }
-        
+
         }
-        
-        if ( isset( $cssPath ) ) {
-            echo "<link rel='stylesheet' type='text/css' href='{$cssPath}'></link>";
+
+        if (isset($cssPath)) {
+            echo "<link rel='stylesheet' type='text/css' href='" . $cssPath . "' />";
         }
-        
+
         return $this;
-        
+
     }
-    
+
     /**
      * Provides the appropriate path to where required CSS is stored for these charting libraries
-     * @return Ambigous <string, \Altamira\Config>
+     * @return string|\Altamira\Config
      */
     public function getCSSPath()
     {
-        $config = \Altamira\Config::getInstance();
-        
+        $config = Config::getInstance();
+
         $cssPath = '';
-        
-        foreach ( $this->libraries as $library => $junk ) {
-            switch( $library ) {
-                case \Altamira\JsWriter\Flot::LIBRARY:
+
+        foreach ($this->libraries as $library => $junk) {
+            switch ($library) {
+                case Flot::LIBRARY:
                     break;
-                case \Altamira\JsWriter\JqPlot::LIBRARY:
+                case JqPlot::LIBRARY:
                 default:
                     $cssPath = $config['css.jqplotpath'];
             }
         }
-        
+
         return $cssPath;
     }
-    
+
 }
